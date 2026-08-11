@@ -1,5 +1,5 @@
-import './App.css'
-import Favourite from "./pages/Favorites"
+import './css/App.css'
+import Favourites from "./pages/Favourites"
 import Home from "./pages/Home"
 import { Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
@@ -11,7 +11,7 @@ function App() {
       <main className="main-content">
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/favourites' element={ <Favourite /> } />
+          <Route path='/favourites' element={ <Favourites /> } />
         </Routes>
       </main>
     </div>

@@ -1,20 +1,52 @@
 import MovieCard from "../components/MovieCard";
-import {useState} from "react";
+import {useState, useEffect} from "react";
+import {searchMovies, getPopularMovies} from "../services/api";
+import "../css/Home.css"
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState("");
+    const [movies, setMovies] = useState([]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const movies = [
-        {id: 1, title: "John Wick", release_date: "2014-10-24", url: "https://image.tmdb.org/t/p/w500/5vHssUeVe25bMrof1HyaPyWgaP.jpg"},
-        {id: 2, title: "Inception", release_date: "2010-07-16", url: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg"},
-        {id: 3, title: "The Dark Knight", release_date: "2008-07-18", url: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg"},
-        {id: 4, title: "Interstellar", release_date: "2014-11-07", url: "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg"},
-        {id: 5, title: "The Matrix", release_date: "1999-03-31", url: "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg"},
-    ];
+    useEffect(() => {
+        const loadPopularMovies = async () => {
+            try {
+                const popularMovies = await getPopularMovies();
+                setMovies(popularMovies);
+            } catch (error) {
+                console.log(error);
+                setError("Failed to fetch popular movies. Please try again later.");
+            } finally {
+                setLoading(false);
+            }
+        }
 
-    const handleSearch = (e) => {
+        loadPopularMovies();
+    }, []);
+
+    const handleSearch = async (e) => {
         e.preventDefault();
-        alert("You searched for: " + searchQuery);
+        if (!searchQuery.trim()) {
+            return;
+        }
+
+        if (loading) {
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const searchResults = await searchMovies(searchQuery);
+            setMovies(searchResults);
+            setError(null);
+        } catch (error) {
+            console.log(error);
+            setError("Failed to search for movies. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -30,12 +62,18 @@ function Home() {
                 <button type="submit" className="search-button">Search</button>
             </form>
 
-            <div className="movie-grid">
+            { error && <div className="error-message">{error}</div> }
+
+            { loading ? (
+                <div className="loading>">Loading...</div>
+            ) : (
+                <div className="movies-grid">
                 {movies.map(
                     (movie) => 
                             <MovieCard movie={movie} key={movie.id} />
                     )}
             </div>
+            )}
         </div>
     );
 }

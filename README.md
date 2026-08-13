@@ -70,7 +70,7 @@ npm run preview
 ## Project Structure
 
 ```
-frontend/
+Movie Browser/
 ├── src/
 │   ├── components/       # Reusable React components
 │   │   ├── MovieCard.jsx
@@ -83,10 +83,17 @@ frontend/
 │   ├── contexts/        # React contexts
 │   │   └── MovieContext.jsx
 │   ├── css/             # Stylesheets
-│   ├── App.jsx
-│   └── main.jsx
-├── public/              # Static assets
+│   │   ├── App.css
+│   │   ├── Home.css
+│   │   ├── Favourites.css
+│   │   ├── MovieCard.css
+│   │   ├── Navbar.css
+│   │   └── index.css
+│   ├── assets/          # Static assets
+│   ├── App.jsx          # Main App component
+│   └── main.jsx         # Application entry point
 ├── vite.config.js
+├── eslint.config.js
 ├── package.json
 └── README.md
 ```
